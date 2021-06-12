@@ -5,6 +5,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author 柯凯元
@@ -12,11 +15,15 @@ import java.awt.event.WindowEvent;
  */
 public class TankFrame extends Frame {
 
-    int x = 200, y = 200;
+    Tank myTank = new Tank(350, 400, Dir.UP, Team.TEAM_A,this);
+    List<Tank> enemyTanks = new ArrayList<>();
+    //Bullet bullet = null;
+    List<Bullet> bullets = new ArrayList<>();
+    public static final int GAME_WIDTH = 800, GAME_HEIGHT = 600;
 
     public TankFrame() throws HeadlessException {
 
-        setSize(800, 600);
+        setSize(GAME_WIDTH, GAME_HEIGHT);
         setResizable(false);
         setTitle("tank war");
         setVisible(true);
@@ -31,10 +38,62 @@ public class TankFrame extends Frame {
         });
     }
 
+    Image offScreenImage = null;
+
+    @Override
+    public void update(Graphics g) {
+        if (offScreenImage == null) {
+            offScreenImage = this.createImage(GAME_WIDTH, GAME_HEIGHT);
+        }
+        Graphics gOffScreen = offScreenImage.getGraphics();
+        Color c = gOffScreen.getColor();
+        gOffScreen.setColor(Color.BLACK);
+        gOffScreen.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+        gOffScreen.setColor(c);
+        paint(gOffScreen);
+        g.drawImage(offScreenImage, 0, 0, null);
+    }
+
+    public void addBullet() {
+
+    }
+
     @Override
     public void paint(Graphics g) {
-        g.fillRect(x, y, 50, 50);
-        //x += 10;
+
+        Color color = g.getColor();
+        g.setColor(Color.WHITE);
+        g.drawString("子弹的数量：" + bullets.size(), 10, 60);
+        g.drawString("敌军的数量：" + enemyTanks.size(), 10, 80);
+        g.setColor(color);
+        //System.out.println(bullets.size());
+        myTank.paint(g);
+
+        for (int i = 0; i < enemyTanks.size(); i++) {
+            enemyTanks.get(i).paint(g);
+        }
+
+//        for(Iterator<Bullet> it=bullets.iterator();it.hasNext();){
+//            it.next().paint(g);
+//        }
+        for (int i = 0; i < bullets.size(); i++) {
+            bullets.get(i).paint(g);
+        }
+
+        for (int i = 0; i < bullets.size(); i++) {
+            Rectangle bulletRectangle = bullets.get(i).getRectangle();
+            for (int j = 0; j < enemyTanks.size(); j++) {
+                if(bullets.get(i).getTeam().equals(enemyTanks.get(j).getTeam())){
+                    continue;
+                }
+                Rectangle tankRectangle = enemyTanks.get(j).getRectangle();
+                if (bulletRectangle.intersects(tankRectangle)) {
+                    bullets.remove(i);
+                    enemyTanks.remove(j);
+                    break;
+                }
+            }
+        }
     }
 
     class MyKeyListener extends KeyAdapter {
@@ -60,12 +119,17 @@ public class TankFrame extends Frame {
                     right = true;
                     break;
             }
+
+            setMainTankDir();
             repaint();
         }
 
         @Override
         public void keyReleased(KeyEvent e) {
             switch (e.getKeyCode()) {
+                case KeyEvent.VK_SPACE:
+                    myTank.fire();
+                    break;
                 case KeyEvent.VK_UP:
                     up = false;
                     break;
@@ -79,42 +143,28 @@ public class TankFrame extends Frame {
                     right = false;
                     break;
             }
+            setMainTankDir();
+        }
+
+        //设置坦克方向
+        private void setMainTankDir() {
+
+            if (up)
+                myTank.setDir(Dir.UP);
+            else if (down)
+                myTank.setDir(Dir.DOWN);
+            else if (left)
+                myTank.setDir(Dir.LEFT);
+            else if (right)
+                myTank.setDir(Dir.RIGHT);
+            else {
+                myTank.setMoving(false);
+                return;
+            }
+            myTank.setMoving(true);
         }
 
     }
 
-//    class MyKeyListener extends KeyAdapter {
-//
-//        boolean up = false;
-//        boolean down = false;
-//        boolean left = false;
-//        boolean right = false;
-//
-//        @Override
-//        public void keyPressed(KeyEvent e) {
-//            switch (e.getKeyCode()) {
-//                case KeyEvent.VK_LEFT:
-//                    x -= 10;
-//                    break;
-//                case KeyEvent.VK_UP:
-//                    y -= 10;
-//                    break;
-//                case KeyEvent.VK_RIGHT:
-//                    x += 10;
-//                    break;
-//                case KeyEvent.VK_DOWN:
-//                    y += 10;
-//                    break;
-//                default:
-//                    break;
-//            }
-//            repaint();
-//        }
-//
-//        @Override
-//        public void keyReleased(KeyEvent e) {
-//            super.keyReleased(e);
-//        }
-//
-//    }
 }
+
