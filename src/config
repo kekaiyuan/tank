@@ -1,0 +1,14 @@
+#坦克数量
+initTankCount=10
+#玩家坦克图片
+playerTankImage=src/images/GoodTank1.png
+#机器人坦克图片
+robotTankImage=src/images/BadTank1.png
+#坦克速度
+tankSpeed=15
+#子弹速度
+bulletSpeed=30
+#游戏宽度
+gameWidth=1080
+#游戏高度
+gameHeight=720

@@ -1,8 +1,9 @@
 package com.kky.tank;
 
-import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import com.kky.tank.frame.TankFrame;
+import com.kky.tank.tank.RobotTank;
+
+import java.util.Properties;
 
 /**
  * @author 柯凯元
@@ -11,12 +12,17 @@ import java.awt.event.WindowEvent;
 public class Main {
 
     public static void main(String[] args) {
+
         TankFrame tf = new TankFrame();
 
+
         //敌人初始化
-        for (int i = 0; i < 5; i++) {
-            tf.enemyTanks.add(new Tank(50 + i * 140, 100, Dir.DOWN, Team.TEAM_B,tf));
+        for (int i = 0; i < Integer.parseInt(PropertyMgr.get("initTankCount").toString()); i++) {
+            tf.enemyTanks.add(new RobotTank(50 + i * 140, 100, tf));
         }
+
+        //背景音乐
+        new Thread(() -> new Audio("audio/war1.wav").loop()).start();
 
         while (true) {
             try {

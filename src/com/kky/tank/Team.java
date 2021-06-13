@@ -5,5 +5,5 @@ package com.kky.tank;
  * @create 2021/6/13 1:38
  */
 public enum Team {
-    TEAM_A,TEAM_B
+    PLAYER,ROBOT
 }
