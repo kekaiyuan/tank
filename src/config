@@ -4,6 +4,8 @@ initTankCount=10
 playerTankImage=src/images/GoodTank1.png
 #机器人坦克图片
 robotTankImage=src/images/BadTank1.png
+#子弹图片
+bulletImage=src/images/bulletU.png
 #坦克速度
 tankSpeed=15
 #子弹速度
@@ -12,3 +14,13 @@ bulletSpeed=30
 gameWidth=1080
 #游戏高度
 gameHeight=720
+#开启所有声音
+isVoice=flase
+#开启坦克行进声音
+isTankMoveVoice=true
+#开启背景音乐
+isBackVoice=true
+#开启坦克开火声音
+isTankFireVoice=true
+#开启爆炸声音
+isExplodeVoice=true

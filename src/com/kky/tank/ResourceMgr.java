@@ -12,8 +12,11 @@ import java.io.IOException;
 
 /**
  * 图片资源管理
+ * 使用单例模式
  */
 public class ResourceMgr {
+
+    private ResourceMgr(){}
 
     //图片的路径
     private static String picturePath = "src/images/";
@@ -24,7 +27,7 @@ public class ResourceMgr {
     //
     public static BufferedImage[] robotTank = new BufferedImage[4];
     //子弹上下左右四个方向的图片
-    public static BufferedImage bulletUp, bulletDown, bulletLeft, bulletRight;
+    public static BufferedImage[] bullet = new BufferedImage[4];
     //public static BufferedImage[] bullets = new BufferedImage[4];
     //爆炸的图片
     public static BufferedImage[] explosions = new BufferedImage[16];
@@ -42,20 +45,20 @@ public class ResourceMgr {
             robotTank[2] = ImageUtil.rotateImage(robotTank[0], -90);
             robotTank[3] = ImageUtil.rotateImage(robotTank[0], 90);
 
-
             //加载子弹图片
 
-            bulletUp = ImageIO.read(new File(picturePath + "bulletU.gif"));
-            bulletDown = ImageIO.read(new File(picturePath + "bulletD.gif"));
-            bulletLeft = ImageIO.read(new File(picturePath + "bulletL.gif"));
-            bulletRight = ImageIO.read(new File(picturePath + "bulletR.gif"));
+            bullet[0] = ImageIO.read(new File(PropertyMgr.get("bulletImage").toString()));
+            bullet[1] = ImageUtil.rotateImage(bullet[0], 180);
+            bullet[2] = ImageUtil.rotateImage(bullet[0], -90);
+            bullet[3] = ImageUtil.rotateImage(bullet[0], 90);
+
 
             //加载爆炸图片
             for (int i = 0; i < 16; i++) {
                 explosions[i] = ImageIO.read(new File(picturePath + "e" + (i + 1) + ".gif"));
             }
 
-            System.out.println(playerTank);
+            //System.out.println(playerTank);
 
         } catch (IOException e) {
             e.printStackTrace();

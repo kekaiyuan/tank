@@ -8,6 +8,7 @@ import java.util.Properties;
 
 /**
  * 管理配置文件
+ * 使用单例模式
  */
 public class PropertyMgr {
     private static final Properties properties = new Properties();

@@ -1,6 +1,7 @@
 package com.kky.tank.tank;
 
 import com.kky.tank.*;
+import com.kky.tank.fire.FireStrategy;
 import com.kky.tank.frame.TankFrame;
 
 import java.awt.*;
@@ -16,12 +17,10 @@ public class Tank {
     protected int x, y;
     protected Dir dir;
     protected static final int SPEED = Integer.parseInt(PropertyMgr.get("tankSpeed").toString());
-    protected boolean isMoving;
+    protected boolean isMoving = true;
     protected TankFrame tankFrame = null;
-    protected static final int TANK_WIDTH = 50, TANK_HEIGHT = 50;
     //private BufferedImage tankImage = null;
     protected Team team = null;
-    protected Random random = new Random();
     protected BufferedImage[] tankImage = null;
     protected Rectangle rectangle = new Rectangle();
 
@@ -45,15 +44,16 @@ public class Tank {
     }
 
     public void paint(Graphics g) {
+
+        if (isMoving) {
+            move();
+        }
+        //System.out.println(x+"/"+y);
         g.drawImage(tankImage[dir.ordinal()], x, y, null);
-        move();
+
     }
 
     protected void move() {
-
-        if (!isMoving)
-            return;
-
         switch (dir) {
             case UP:
                 y -= SPEED;
@@ -77,51 +77,40 @@ public class Tank {
                 break;
         }
 
-        for (int i = 0; i < tankFrame.enemyTanks.size(); i++) {
-            if (this == tankFrame.enemyTanks.get(i)) {
+        for (int i = 0; i < tankFrame.tanks.size(); i++) {
+            if (this == tankFrame.tanks.get(i)) {
                 continue;
             } else {
                 Rectangle rectangle1 = this.getRectangle();
-                Rectangle rectangle2 = tankFrame.enemyTanks.get(i).getRectangle();
+                Rectangle rectangle2 = tankFrame.tanks.get(i).getRectangle();
                 if (rectangle1.intersects(rectangle2)) {
-                    int x1 = rectangle2.x;
-                    int x2 = rectangle2.x + rectangle2.width;
-                    if (x1 <= x && x <= x2) {
-                        if (dir == Dir.LEFT)
-                            x = x2;
-                        if (dir == Dir.RIGHT)
-                            x = x1;
-                    }
-                    int y1 = rectangle2.y;
-                    int y2 = rectangle2.y + rectangle2.height;
-                    if (y1 <= y && y < y2) {
-                        if (dir == Dir.UP)
-                            y = y2;
-                        if (dir == Dir.DOWN)
-                            y = y1;
+                    switch (this.dir) {
+                        case UP:
+                            y = rectangle2.y + rectangle2.height;
+                            break;
+                        case DOWN:
+                            y = rectangle2.y - rectangle1.height;
+                            break;
+                        case LEFT:
+                            x = rectangle2.x + rectangle2.width;
+                            break;
+                        case RIGHT:
+                            x = rectangle2.x - rectangle1.width;
+                            break;
                     }
                 }
             }
         }
+
+
     }
 
-    private void robotMove() {
-
-        if (random.nextInt(100) > 90) {
-            this.dir = Dir.values()[random.nextInt(4)];
-            //this.dir = Dir.LEFT;
-        }
-
-        if (random.nextInt(100) > 95) {
-            fire();
-        }
-    }
-
-    public void fire() {
+    public void fire(FireStrategy fireStrategy) {
         //子弹的x，y为坦克中心点坐标
         int bulletX = this.x + tankImage[dir.ordinal()].getWidth() / 2;
         int bulletY = this.y + tankImage[dir.ordinal()].getHeight() / 2;
-        tankFrame.bullets.add(new Bullet(bulletX, bulletY, this.dir, this.team, this.tankFrame));
+        //FireContext fireContext = new FireContext(new SingleFire());
+        fireStrategy.fire(bulletX, bulletY, this.dir, this.team, this.tankFrame);
     }
 
     public Rectangle getRectangle() {

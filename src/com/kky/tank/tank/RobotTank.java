@@ -2,6 +2,7 @@ package com.kky.tank.tank;
 
 import com.kky.tank.Dir;
 import com.kky.tank.ResourceMgr;
+import com.kky.tank.fire.SingleFireStrategy;
 import com.kky.tank.frame.TankFrame;
 import com.kky.tank.Team;
 
@@ -20,9 +21,7 @@ public class RobotTank extends Tank {
         super(x, y, tankFrame);
         dir = Dir.DOWN;
         team = Team.ROBOT;
-        isMoving = true;
         tankImage = ResourceMgr.robotTank;
-
     }
 
     public void paint(Graphics g){
@@ -33,9 +32,11 @@ public class RobotTank extends Tank {
         }
 
         if (random.nextInt(100) > 95) {
-            fire();
+            fire(SingleFireStrategy.getSingleFireStrategy());
         }
         super.paint(g);
+
     }
+
 
 }

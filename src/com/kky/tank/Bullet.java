@@ -15,7 +15,7 @@ public class Bullet {
     //子弹速度
     private static final int SPEED = Integer.parseInt(PropertyMgr.get("bulletSpeed").toString());
     //    //子弹大小
-//    private static final int WIDTH = 30, HEIGHT = 30;
+    //    private static final int WIDTH = 30, HEIGHT = 30;
     //持有一个窗口的引用
     TankFrame tankFrame = null;
     private Rectangle rectangle = new Rectangle();
@@ -25,19 +25,19 @@ public class Bullet {
     //方向
     private Dir dir;
 
-    private BufferedImage imageBullet = null;
+
 
     private Team team = null;
 
     public Bullet(int x, int y, Dir dir, Team team, TankFrame tankFrame) {
         this.dir = dir;
-        setImageBullet();
+
         this.x = x;
         this.y = y;
         this.team = team;
         this.tankFrame = tankFrame;
-        rectangle.width = imageBullet.getWidth();
-        rectangle.height = imageBullet.getHeight();
+        rectangle.width = ResourceMgr.bullet[dir.ordinal()].getWidth();
+        rectangle.height = ResourceMgr.bullet[dir.ordinal()].getHeight();
     }
 
     public int getX() {
@@ -52,29 +52,13 @@ public class Bullet {
         return team;
     }
 
-    public void setImageBullet() {
-        switch (dir) {
-            case UP:
-                imageBullet = ResourceMgr.bulletUp;
-                break;
-            case DOWN:
-                imageBullet = ResourceMgr.bulletDown;
-                break;
-            case LEFT:
-                imageBullet = ResourceMgr.bulletLeft;
-                break;
-            case RIGHT:
-                imageBullet = ResourceMgr.bulletRight;
-                break;
-        }
-    }
+
 
     //画子弹
     public void paint(Graphics g) {
-        setImageBullet();
-        int bulletX = x - imageBullet.getWidth() / 2;
-        int bulletY = y - imageBullet.getHeight() / 2;
-        g.drawImage(imageBullet, bulletX, bulletY, null);
+        int bulletX = x - ResourceMgr.bullet[dir.ordinal()].getWidth() / 2;
+        int bulletY = y - ResourceMgr.bullet[dir.ordinal()].getHeight() / 2;
+        g.drawImage(ResourceMgr.bullet[dir.ordinal()], bulletX, bulletY, null);
         move();
     }
 
@@ -106,20 +90,17 @@ public class Bullet {
         }
     }
 
-    public Rectangle getRectangle() {
-        Rectangle bulletRectangle = new Rectangle(x, y, imageBullet.getWidth(), imageBullet.getHeight());
-        return bulletRectangle;
-    }
 
     public void collideWith(Tank tank) {
-        Rectangle bulletRectangle = this.getRectangle();
+        rectangle.x=this.x;
+        rectangle.y=this.y;
 
         if (this.getTeam().equals(tank.getTeam()))
             return;
 
-        if (bulletRectangle.intersects(tank.getRectangle())) {
+        if (rectangle.intersects(tank.getRectangle())) {
             //相交区域
-            Rectangle intersection = bulletRectangle.intersection(tank.getRectangle());
+            Rectangle intersection = rectangle.intersection(tank.getRectangle());
 
             //计算撞击点
             int impactX = intersection.x + intersection.width / 2;
@@ -127,7 +108,7 @@ public class Bullet {
 
             tankFrame.explodes.add(new Explode(impactX, impactY, tankFrame));
             tankFrame.bullets.remove(this);
-            tankFrame.enemyTanks.remove(tank);
+            tankFrame.tanks.remove(tank);
         }
     }
 

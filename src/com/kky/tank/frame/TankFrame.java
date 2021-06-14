@@ -1,12 +1,10 @@
 package com.kky.tank.frame;
 
-import com.kky.tank.Bullet;
-import com.kky.tank.Dir;
-import com.kky.tank.Explode;
-import com.kky.tank.PropertyMgr;
+import com.kky.tank.*;
+import com.kky.tank.fire.FireMode;
+import com.kky.tank.fire.FourDirFireStrategy;
 import com.kky.tank.tank.PlayerTank;
 import com.kky.tank.tank.Tank;
-import com.sun.deploy.util.JVMParameters;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -26,7 +24,9 @@ public class TankFrame extends Frame {
     //Tank myTank = new Tank(350, 400, Dir.UP, Team.PLAYER, this);
     PlayerTank myTank = new PlayerTank(350, 400, this);
 
-    public List<Tank> enemyTanks = new ArrayList<>();
+    //public List<Tank> enemyTanks = new ArrayList<>();
+    public List<Tank> tanks = new ArrayList<>();
+
 
     //Bullet bullet = null;
     public List<Bullet> bullets = new ArrayList<>();
@@ -36,6 +36,8 @@ public class TankFrame extends Frame {
 
     public TankFrame() throws HeadlessException {
 
+
+        tanks.add(myTank);
 
 
         setSize(GAME_WIDTH, GAME_HEIGHT);
@@ -80,13 +82,15 @@ public class TankFrame extends Frame {
         Color color = g.getColor();
         g.setColor(Color.WHITE);
         g.drawString("子弹的数量：" + bullets.size(), 10, 60);
-        g.drawString("敌军的数量：" + enemyTanks.size(), 10, 80);
+        g.drawString("坦克的数量：" + tanks.size(), 10, 80);
         g.drawString("爆炸的数量：" + explodes.size(), 10, 100);
-        g.setColor(color);
-        myTank.paint(g);
+        g.drawString("开火模式为：" + FireMode.values()[myTank.getFireMode()], 10, 120);
 
-        for (int i = 0; i < enemyTanks.size(); i++) {
-            enemyTanks.get(i).paint(g);
+        g.setColor(color);
+
+
+        for(int i = 0;i<tanks.size();i++){
+            tanks.get(i).paint(g);
         }
 
         for (int i = 0; i < bullets.size(); i++) {
@@ -94,8 +98,12 @@ public class TankFrame extends Frame {
         }
 
         for (int i = 0; i < bullets.size(); i++) {
-            for(int j =0;j<enemyTanks.size();j++){
-                bullets.get(i).collideWith(enemyTanks.get(j));
+            for (int j = 0; j < tanks.size(); j++) {
+                if(tanks.get(j).getTeam()== Team.PLAYER){
+                    continue;
+                }else{
+                    bullets.get(i).collideWith(tanks.get(j));
+                }
             }
         }
 
@@ -134,7 +142,11 @@ public class TankFrame extends Frame {
 
         @Override
         public void keyReleased(KeyEvent e) {
+            //System.out.println(e.toString());
             switch (e.getKeyCode()) {
+                case KeyEvent.VK_CONTROL:
+                    myTank.changeFireMode();
+                    break;
                 case KeyEvent.VK_SPACE:
                     myTank.fire();
                     break;

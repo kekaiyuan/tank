@@ -25,7 +25,12 @@ public class Explode {
         this.y = y;
         this.tankFrame = tankFrame;
 
-        new Thread(()->new Audio("audio/explode.wav").play()).start();
+        Boolean isVoice = Boolean.parseBoolean(PropertyMgr.get("isVoice").toString());
+        isVoice = isVoice && Boolean.parseBoolean(PropertyMgr.get("isExplodeVoice").toString());
+        if (isVoice) {
+            new Thread(() -> new Audio("audio/explode.wav").play()).start();
+        }
+
     }
 
     public void paint(Graphics g) {

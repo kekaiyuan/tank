@@ -13,16 +13,24 @@ public class Main {
 
     public static void main(String[] args) {
 
-        TankFrame tf = new TankFrame();
 
+        TankFrame tf = new TankFrame();
 
         //敌人初始化
         for (int i = 0; i < Integer.parseInt(PropertyMgr.get("initTankCount").toString()); i++) {
-            tf.enemyTanks.add(new RobotTank(50 + i * 140, 100, tf));
+            tf.tanks.add(new RobotTank(50 + i * 140, 200, tf));
         }
 
+
+
+
         //背景音乐
-        new Thread(() -> new Audio("audio/war1.wav").loop()).start();
+        Boolean isVoice = Boolean.parseBoolean(PropertyMgr.get("isVoice").toString());
+        isVoice = isVoice && Boolean.parseBoolean(PropertyMgr.get("isBackVoice").toString());
+        if(isVoice){
+            new Thread(() -> new Audio("audio/war1.wav").loop()).start();
+        }
+
 
         while (true) {
             try {
