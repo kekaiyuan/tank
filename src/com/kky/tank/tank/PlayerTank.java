@@ -17,10 +17,9 @@ import java.lang.reflect.Method;
 public class PlayerTank extends Tank {
 
     private int fireMode = 0;
-    //private boolean isMoving = false;
 
-    public PlayerTank(int x, int y, TankFrame tankFrame) {
-        super(x, y, tankFrame);
+    public PlayerTank(int x, int y) {
+        super(x, y);
         dir = Dir.UP;
         team = Team.PLAYER;
         isMoving = false;
@@ -43,7 +42,7 @@ public class PlayerTank extends Tank {
         isMoving = moving;
     }
 
-    protected void move() {
+    public void move() {
         Boolean isVoice = Boolean.parseBoolean(PropertyMgr.get("isVoice").toString());
         isVoice = isVoice && Boolean.parseBoolean(PropertyMgr.get("isTankMoveVoice").toString());
         if (isVoice) {
@@ -72,30 +71,6 @@ public class PlayerTank extends Tank {
                 break;
         }
 
-//        String className = "com.kky.tank.fire."+FireMode.values()[fireMode].toString();
-//        String methodName = "get"+FireMode.values()[fireMode].toString();
-//
-//        try {
-//            Class c = Class.forName(className);
-//            FireStrategy fireStrategy = (FireStrategy) c.newInstance();
-//            Method method = fireStrategy.getClass().getDeclaredMethod(methodName);
-//            super.fire((FireStrategy) method.invoke(fireStrategy));
-//
-//            //super.fire((FireStrategy) Class.forName(className).newInstance());
-//        } catch (InstantiationException e) {
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (NoSuchMethodException e) {
-//            e.printStackTrace();
-//        } catch (InvocationTargetException e) {
-//            e.printStackTrace();
-//        }
-
-
     }
-
 
 }

@@ -1,18 +1,11 @@
 package com.kky.tank.frame;
 
 import com.kky.tank.*;
-import com.kky.tank.fire.FireMode;
-import com.kky.tank.fire.FourDirFireStrategy;
-import com.kky.tank.tank.PlayerTank;
-import com.kky.tank.tank.Tank;
-
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author 柯凯元
@@ -20,25 +13,10 @@ import java.util.List;
  */
 public class TankFrame extends Frame {
 
-
-    //Tank myTank = new Tank(350, 400, Dir.UP, Team.PLAYER, this);
-    PlayerTank myTank = new PlayerTank(350, 400, this);
-
-    //public List<Tank> enemyTanks = new ArrayList<>();
-    public List<Tank> tanks = new ArrayList<>();
-
-
-    //Bullet bullet = null;
-    public List<Bullet> bullets = new ArrayList<>();
-    public List<Explode> explodes = new ArrayList<>();
     public static final int GAME_WIDTH = Integer.parseInt(PropertyMgr.get("gameWidth").toString());
     public static final int GAME_HEIGHT = Integer.parseInt(PropertyMgr.get("gameHeight").toString());
 
     public TankFrame() throws HeadlessException {
-
-
-        tanks.add(myTank);
-
 
         setSize(GAME_WIDTH, GAME_HEIGHT);
         setResizable(false);
@@ -54,6 +32,11 @@ public class TankFrame extends Frame {
                 System.exit(0);
             }
         });
+
+        GameModel.getInstance().setLeftBound(0);
+        GameModel.getInstance().setTopBound(this.getInsets().top);
+        GameModel.getInstance().setDownBound(GAME_HEIGHT);
+        GameModel.getInstance().setRightBound(GAME_WIDTH);
     }
 
     Image offScreenImage = null;
@@ -72,44 +55,10 @@ public class TankFrame extends Frame {
         g.drawImage(offScreenImage, 0, 0, null);
     }
 
-    public void addBullet() {
-
-    }
-
     @Override
     public void paint(Graphics g) {
 
-        Color color = g.getColor();
-        g.setColor(Color.WHITE);
-        g.drawString("子弹的数量：" + bullets.size(), 10, 60);
-        g.drawString("坦克的数量：" + tanks.size(), 10, 80);
-        g.drawString("爆炸的数量：" + explodes.size(), 10, 100);
-        g.drawString("开火模式为：" + FireMode.values()[myTank.getFireMode()], 10, 120);
-
-        g.setColor(color);
-
-
-        for(int i = 0;i<tanks.size();i++){
-            tanks.get(i).paint(g);
-        }
-
-        for (int i = 0; i < bullets.size(); i++) {
-            bullets.get(i).paint(g);
-        }
-
-        for (int i = 0; i < bullets.size(); i++) {
-            for (int j = 0; j < tanks.size(); j++) {
-                if(tanks.get(j).getTeam()== Team.PLAYER){
-                    continue;
-                }else{
-                    bullets.get(i).collideWith(tanks.get(j));
-                }
-            }
-        }
-
-        for (int i = 0; i < explodes.size(); i++) {
-            explodes.get(i).paint(g);
-        }
+        GameModel.getInstance().paint(g);
     }
 
     class MyKeyListener extends KeyAdapter {
@@ -137,18 +86,17 @@ public class TankFrame extends Frame {
             }
 
             setMainTankDir();
-            repaint();
+            //repaint();
         }
 
         @Override
         public void keyReleased(KeyEvent e) {
-            //System.out.println(e.toString());
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_CONTROL:
-                    myTank.changeFireMode();
+                    GameModel.getInstance().getMyTank().changeFireMode();
                     break;
                 case KeyEvent.VK_SPACE:
-                    myTank.fire();
+                    GameModel.getInstance().getMyTank().fire();
                     break;
                 case KeyEvent.VK_UP:
                     up = false;
@@ -168,20 +116,19 @@ public class TankFrame extends Frame {
 
         //设置坦克方向
         private void setMainTankDir() {
-
             if (up)
-                myTank.setDir(Dir.UP);
+                GameModel.getInstance().getMyTank().setDir(Dir.UP);
             else if (down)
-                myTank.setDir(Dir.DOWN);
+                GameModel.getInstance().getMyTank().setDir(Dir.DOWN);
             else if (left)
-                myTank.setDir(Dir.LEFT);
+                GameModel.getInstance().getMyTank().setDir(Dir.LEFT);
             else if (right)
-                myTank.setDir(Dir.RIGHT);
+                GameModel.getInstance().getMyTank().setDir(Dir.RIGHT);
             else {
-                myTank.setMoving(false);
+                GameModel.getInstance().getMyTank().setMoving(false);
                 return;
             }
-            myTank.setMoving(true);
+            GameModel.getInstance().getMyTank().setMoving(true);
         }
 
     }

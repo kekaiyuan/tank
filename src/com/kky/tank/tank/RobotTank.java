@@ -1,6 +1,7 @@
 package com.kky.tank.tank;
 
 import com.kky.tank.Dir;
+import com.kky.tank.GameModel;
 import com.kky.tank.ResourceMgr;
 import com.kky.tank.fire.SingleFireStrategy;
 import com.kky.tank.frame.TankFrame;
@@ -17,8 +18,8 @@ public class RobotTank extends Tank {
 
     Random random = new Random();
 
-    public RobotTank(int x, int y, TankFrame tankFrame) {
-        super(x, y, tankFrame);
+    public RobotTank(int x, int y) {
+        super(x, y);
         dir = Dir.DOWN;
         team = Team.ROBOT;
         tankImage = ResourceMgr.robotTank;
@@ -28,7 +29,6 @@ public class RobotTank extends Tank {
 
         if (random.nextInt(100) > 90) {
             super.dir = Dir.values()[random.nextInt(4)];
-            //this.dir = Dir.LEFT;
         }
 
         if (random.nextInt(100) > 95) {
@@ -37,6 +37,5 @@ public class RobotTank extends Tank {
         super.paint(g);
 
     }
-
 
 }

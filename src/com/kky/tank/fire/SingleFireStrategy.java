@@ -2,6 +2,7 @@ package com.kky.tank.fire;
 
 import com.kky.tank.Bullet;
 import com.kky.tank.Dir;
+import com.kky.tank.GameModel;
 import com.kky.tank.Team;
 import com.kky.tank.frame.TankFrame;
 
@@ -24,7 +25,7 @@ public class SingleFireStrategy extends FireStrategy {
     }
 
     @Override
-    public void fire(int bulletX, int bulletY, Dir dir, Team team, TankFrame tankFrame) {
-        tankFrame.bullets.add(new Bullet(bulletX, bulletY, dir, team, tankFrame));
+    public void fire(int bulletX, int bulletY, Dir dir, Team team) {
+        GameModel.getInstance().add(new Bullet(bulletX, bulletY, dir, team));
     }
 }

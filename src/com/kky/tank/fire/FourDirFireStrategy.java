@@ -7,6 +7,7 @@ package com.kky.tank.fire;
 
 import com.kky.tank.Bullet;
 import com.kky.tank.Dir;
+import com.kky.tank.GameModel;
 import com.kky.tank.Team;
 import com.kky.tank.frame.TankFrame;
 
@@ -25,10 +26,9 @@ public class FourDirFireStrategy extends FireStrategy {
     }
 
     @Override
-    public void fire(int bulletX, int bulletY, Dir dir, Team team, TankFrame tankFrame) {
+    public void fire(int bulletX, int bulletY, Dir dir, Team team) {
         for (int i = 0; i < 4; i++) {
-            tankFrame.bullets.add(new Bullet(bulletX, bulletY, Dir.values()[i], team, tankFrame));
+            GameModel.getInstance().add(new Bullet(bulletX, bulletY, Dir.values()[i], team));
         }
-        //tankFrame.bullets.add(new Bullet(bulletX, bulletY, dir, team, tankFrame));
     }
 }

@@ -13,16 +13,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-
         TankFrame tf = new TankFrame();
-
-        //敌人初始化
-        for (int i = 0; i < Integer.parseInt(PropertyMgr.get("initTankCount").toString()); i++) {
-            tf.tanks.add(new RobotTank(50 + i * 140, 200, tf));
-        }
-
-
-
 
         //背景音乐
         Boolean isVoice = Boolean.parseBoolean(PropertyMgr.get("isVoice").toString());

@@ -19,7 +19,7 @@ public class ResourceMgr {
     private ResourceMgr(){}
 
     //图片的路径
-    private static String picturePath = "src/images/";
+
 
     //坦克上下左右四个方向的图片
     //public static BufferedImage playerTankUp, playerTankDown, playerTankLeft, playerTankRight;
@@ -30,7 +30,9 @@ public class ResourceMgr {
     public static BufferedImage[] bullet = new BufferedImage[4];
     //public static BufferedImage[] bullets = new BufferedImage[4];
     //爆炸的图片
-    public static BufferedImage[] explosions = new BufferedImage[16];
+    public static BufferedImage[] explosions = new BufferedImage[Integer.parseInt(PropertyMgr.get("explodeImageSum").toString())];
+
+    public static BufferedImage wall = null;
 
     static {
         try {
@@ -54,10 +56,13 @@ public class ResourceMgr {
 
 
             //加载爆炸图片
-            for (int i = 0; i < 16; i++) {
-                explosions[i] = ImageIO.read(new File(picturePath + "e" + (i + 1) + ".gif"));
+            String explodeImagePath = PropertyMgr.get("explodeImage").toString();
+            //int explodeImageNum = Integer.parseInt(PropertyMgr.get("explodeImageNum").toString());
+            for (int i = 0; i < explosions.length; i++) {
+                explosions[i] = ImageIO.read(new File(explodeImagePath + i + ".gif"));
             }
 
+            wall = ImageIO.read(new File(PropertyMgr.get("wallImage").toString()));
             //System.out.println(playerTank);
 
         } catch (IOException e) {
