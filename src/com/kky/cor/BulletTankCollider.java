@@ -14,13 +14,13 @@ public class BulletTankCollider implements Collider {
 
     @Override
     public boolean collide(GameObject o1, GameObject o2) {
-        if (o2 instanceof PlayerTank) {
-            return false;
-        }
         if (o1 instanceof Tank && o2 instanceof Bullet) {
             GameObject temp = o1;
             o1 = o2;
             o2 = temp;
+        }
+        if (o2 instanceof PlayerTank) {
+            return false;
         }
         if (o1 instanceof Bullet && o2 instanceof Tank) {
             Bullet bullet = (Bullet) o1;
@@ -43,12 +43,10 @@ public class BulletTankCollider implements Collider {
                 GameModel.getInstance().add(new Explode(impactX, impactY));
                 GameModel.getInstance().remove(bullet);
                 GameModel.getInstance().remove(tank);
-                return true;
             }
             return true;
         }
         return false;
     }
-
 
 }
